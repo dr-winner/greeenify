@@ -1,7 +1,7 @@
-
 import Layout from '@/components/layout/Layout';
 import FeaturedCategories from '@/components/products/FeaturedCategories';
 import ProductGrid from '@/components/products/ProductGrid';
+import TestimonialSection from '@/components/testimonials/TestimonialSection';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Link } from 'react-router-dom';
@@ -56,7 +56,7 @@ const featuredProducts = [
     description: "Aromatic fresh basil, perfect for Italian dishes and homemade pesto.",
     price: 2.49,
     unit: "per bunch",
-    image: "https://imgs.search.brave.com/9IKxcc3XrH-kO6qUEFMd4V0kb0tCxj43LS4dYR8Vnvs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTQ3/MzUyMDQwMy9waG90/by9iYXNpbC1jbG9z/ZS11cC1waG90by5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/dlpTdWY0emxOOGpx/RkN0ampmVi1hMVpu/cW1pY3Z6VXNhY2ZZ/VE1KR19nQT0",
+    image: "https://rocketfarms.com/wp-content/uploads/470A2754b-scaled.webp",
     category: "herbs",
     farmerName: "Herb Haven",
     farmerId: "104",
@@ -70,7 +70,7 @@ const featuredProducts = [
     description: "Premium grass-fed beef from free-range cattle.",
     price: 7.99,
     unit: "per lb",
-    image: "https://imgs.search.brave.com/WJYcE80qWPk--kbIePG6zJkKQL69Lxrh6lDAbI6q6l0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93aGl0/ZW9ha3Bhc3R1cmVz/LmNvbS9jZG4vc2hv/cC9jb2xsZWN0aW9u/cy8yMDA1MTEtNG96/LWJ1cmdlci1ncm91/bmQtYmVlZi1wYXR0/aWVzLXNwcmluZy1z/dW1tZXItZmFsbC11/bmNvb2tlZC1iZWVm/LTYwMHg2MDBfMzE4/ZTRhOTYtYjBhNy00/YzVmLWFjNjctZmY3/NmQxYWVlZjVlLmpw/Zz92PTE2MTY3OTI2/MjYmd2lkdGg9MTA4/MA",
+    image: "https://choplocal.com/images/detailed/7/Ground_Beef__2_.jpg",
     category: "meat",
     farmerName: "Meadow Creek Ranch",
     farmerId: "105",
@@ -165,7 +165,7 @@ const Index = () => {
             <div className="relative hidden md:block">
               <div className="absolute inset-0 bg-green-100 rounded-full -translate-x-8 translate-y-8"></div>
               <img 
-                src="https://imgs.search.brave.com/gu5RjaYH8enhf26y7vzzozc-JaTJybdqPtdwNr05oAc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/ZmFybWFmcmljYS5v/cmcvd3AtY29udGVu/dC91cGxvYWRzLzIw/MjQvMDYvWW91bmct/ZmFybWVycy0xMjgw/eDk2MC5qcGc" 
+                src="https://gopebbles.com/wp-content/uploads/2025/01/qtq80-C5NrEx-1024x679.jpeg" 
                 alt="Farming scene"
                 className="relative rounded-3xl shadow-xl w-full h-auto"
               />
@@ -244,53 +244,8 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Testimonials */}
-      <section className="py-16 bg-green-50">
-        <div className="container-custom">
-          <h2 className="text-3xl font-heading font-semibold text-center mb-12">What Our Customers Say</h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
-                <div>
-                  <h4 className="font-medium">Sarah Addobea</h4>
-                  <p className="text-sm text-gray-600">Loyal Customer</p>
-                </div>
-              </div>
-              <p className="text-gray-700">
-                "I've been using Farm Fresh Market for months now, and the quality is consistently excellent. I love knowing exactly where my food comes from!"
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
-                <div>
-                  <h4 className="font-medium">Michael Addo</h4>
-                  <p className="text-sm text-gray-600">Home Chef</p>
-                </div>
-              </div>
-              <p className="text-gray-700">
-                "As a chef, the quality of ingredients matters. Farm Fresh Market's produce has elevated my cooking to a whole new level. My family can taste the difference!"
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 shadow-md">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
-                <div>
-                  <h4 className="font-medium">Emmanuela Kusi</h4>
-                  <p className="text-sm text-gray-600">Health Enthusiast</p>
-                </div>
-              </div>
-              <p className="text-gray-700">
-                "The organic selection is amazing! Delivery is always prompt, and I love the seasonal variety. Farm Fresh Market has made healthy eating so much easier."
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Testimonials - replaced with our new component */}
+      <TestimonialSection />
       
       {/* CTA Section */}
       <section className="bg-harvest-500 py-16">

@@ -6,7 +6,7 @@ const categories = [
   {
     id: 'vegetables',
     name: 'Vegetables',
-    image: 'https://imgs.search.brave.com/7_dD96GQ_JrWgprRcyk41wHOObFwTdlnqyopuvCu3uQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTc0/NDI5MjQ4L3Bob3Rv/L2ZyZXNoLXZlZ2V0/YWJsZXMuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPWZ4bGdP/SUVUN2dLYThNM3J3/a1Y5NzRhVWZCMGdW/cFdpSlF3VW94QTRk/dFE9',
+    image: 'https://media.licdn.com/dms/image/v2/D4D12AQG8xwTte9Bp5w/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1712375344673?e=1748476800&v=beta&t=G9rF7LPTY3bjDEhriigztc0Nc91XuP56MOn3A7bp3fE',
     count: 56
   },
   {
@@ -18,13 +18,13 @@ const categories = [
   {
     id: 'tubers',
     name: 'Tubers & Roots',
-    image: 'https://imgs.search.brave.com/1rDz2GEnxBh500s8-bdfYjHRYfZichjwYTaHyqTNKEw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8w/OC8xMS8wOC80OS9w/b3RhdG9lcy0xNTg1/MDc1XzEyODAuanBn',
+    image: 'https://media.istockphoto.com/id/530514284/photo/potatoes-in-the-farm.jpg?s=612x612&w=0&k=20&c=YE5hCCpeyOYytHuV_H8BBjbb0doK21Ukv0Dl_48862Y=',
     count: 27
   },
   {
     id: 'herbs',
     name: 'Herbs & Spices',
-    image: 'https://imgs.search.brave.com/tnvALa06mQSmZ5ArQxbjKoquQYfls0UmYdiOQES5ImA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzExLzk1LzA5Lzgz/LzM2MF9GXzExOTUw/OTgzNjdfUlhDcnpn/Mkl2cDMxVmZBbmlR/WFZoS0ExOTNFb01l/eHIuanBn',
+    image: 'https://foodal.com/wp-content/uploads/2018/11/Your-Ultimate-Guide-to-Kitchen-Herbs-Spices-FB.jpg',
     count: 18
   },
   {

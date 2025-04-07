@@ -6,11 +6,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { MapPin, Star, Truck, Phone } from "lucide-react";
 
+// Import farmer images
+import farmer1 from '@/assets/images/farmers/farmer1.jpg';
+import farmer2 from '@/assets/images/farmers/farmer2.jpg';
+import farmer3 from '@/assets/images/farmers/farmer3.jpg';
+import farmer4 from '@/assets/images/farmers/farmer4.jpg';
+
 const farmersData = [
   {
     id: 'f1',
     name: 'Abena Mensah',
-    image: 'https://images.unsplash.com/photo-1604072366595-e75dc92d6bdc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm1lciUyMHdvbWFufGVufDB8fDB8fHww',
+    image: farmer1,
     description: 'Specializing in organic produce for over 15 years. Our farm follows sustainable practices in the Eastern Region.',
     location: 'Eastern Region, Ghana',
     rating: 4.9,
@@ -21,7 +27,7 @@ const farmersData = [
   {
     id: 'f2',
     name: 'Kwame Osei',
-    image: 'https://images.unsplash.com/photo-1590682680695-43b964a3ae17?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFybWVyfGVufDB8fDB8fHww',
+    image: farmer2,
     description: 'Family-owned farm specializing in cocoa, plantains and other local produce in the Ashanti Region.',
     location: 'Ashanti Region, Ghana',
     rating: 4.7,
@@ -32,7 +38,7 @@ const farmersData = [
   {
     id: 'f3',
     name: 'Ama Darko',
-    image: 'https://images.unsplash.com/photo-1513569143478-b38b2c0ef97f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZhcm1lcnxlbnwwfHwwfHx8MA%3D%3D',
+    image: farmer3,
     description: 'Artisanal dairy farm producing award-winning cheeses and organic milk products in the Volta Region.',
     location: 'Volta Region, Ghana',
     rating: 4.8,
@@ -43,7 +49,7 @@ const farmersData = [
   {
     id: 'f4',
     name: 'Kofi Addo',
-    image: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzN8fGZhcm1lcnxlbnwwfHwwfHx8MA%3D%3D',
+    image: farmer4,
     description: 'Innovative hydroponic farm focusing on sustainable urban agriculture near Accra.',
     location: 'Greater Accra, Ghana',
     rating: 4.6,

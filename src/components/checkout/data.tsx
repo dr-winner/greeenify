@@ -1,3 +1,4 @@
+
 import { Calendar, Clock, CreditCard, Home, Truck } from "lucide-react";
 import { DeliveryOption, PaymentMethod } from "./types";
 
@@ -6,21 +7,21 @@ export const deliveryOptions: DeliveryOption[] = [
     id: 'standard', 
     name: 'Standard Delivery', 
     description: 'Delivery in 2-3 business days', 
-    price: 15.00,
+    price: 50.00,
     icon: Truck
   },
   { 
     id: 'express', 
     name: 'Express Delivery', 
     description: 'Delivery in 24 hours', 
-    price: 30.00,
+    price: 100.00,
     icon: Truck
   },
   { 
     id: 'scheduled', 
     name: 'Scheduled Delivery', 
     description: 'Choose your preferred delivery time', 
-    price: 25.00,
+    price: 75.00,
     icon: Calendar
   },
   { 
