@@ -1,8 +1,6 @@
-
 import { CheckoutData } from "../types";
 import AddressForm from './shipping/AddressForm';
 import DeliveryOptions from './shipping/DeliveryOptions';
-import ScheduledDelivery from './shipping/ScheduledDelivery';
 
 interface ShippingStepProps {
   checkoutData: CheckoutData;
@@ -26,13 +24,6 @@ const ShippingStep = ({ checkoutData, onUpdateCheckoutData, onContinue }: Shippi
         selectedOption={checkoutData.deliveryOption}
         onOptionChange={handleDeliveryOptionChange}
       />
-      
-      {checkoutData.deliveryOption === 'scheduled' && (
-        <ScheduledDelivery
-          checkoutData={checkoutData}
-          onUpdateCheckoutData={onUpdateCheckoutData}
-        />
-      )}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +13,7 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState<UserRole>('buyer');
+  const [role, setRole] = useState<UserRole>(UserRole.USER);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -91,11 +90,11 @@ const RegisterForm = () => {
             <Label>I want to join as a</Label>
             <RadioGroup value={role} onValueChange={(value) => setRole(value as UserRole)} className="flex flex-col space-y-2">
               <div className="flex items-center space-x-2 border rounded-lg p-3">
-                <RadioGroupItem value="buyer" id="buyer" />
-                <Label htmlFor="buyer" className="cursor-pointer">Buyer - Shop for fresh produce</Label>
+                <RadioGroupItem value={UserRole.USER} id="user" />
+                <Label htmlFor="user" className="cursor-pointer">Buyer - Shop for fresh produce</Label>
               </div>
               <div className="flex items-center space-x-2 border rounded-lg p-3">
-                <RadioGroupItem value="farmer" id="farmer" />
+                <RadioGroupItem value={UserRole.FARMER} id="farmer" />
                 <Label htmlFor="farmer" className="cursor-pointer">Farmer - Sell your produce</Label>
               </div>
             </RadioGroup>

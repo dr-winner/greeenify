@@ -1,10 +1,8 @@
-
 import { Label } from "@/components/ui/label";
 import { CheckoutData } from "../types";
-import PaymentMethodOptions from "./payment/PaymentMethodOptions";
-import CreditCardForm from "./payment/CreditCardForm";
-import MobileMoneyForm from "./payment/MobileMoneyForm";
-import BankTransferInfo from "./payment/BankTransferInfo";
+import PaystackCheckout from "@/components/checkout/PaystackCheckout";
+import { useCart } from "@/hooks/useCart";
+import { CreditCardIcon } from "lucide-react";
 
 interface PaymentStepProps {
   checkoutData: CheckoutData;
@@ -12,42 +10,37 @@ interface PaymentStepProps {
 }
 
 const PaymentStep = ({ checkoutData, onUpdateCheckoutData }: PaymentStepProps) => {
-  const handlePaymentMethodChange = (value: string) => {
-    onUpdateCheckoutData({ paymentMethod: value });
-  };
+  const { total } = useCart();
   
-  const handleCardDetailsChange = (cardDetails: Partial<CheckoutData['cardDetails']>) => {
-    onUpdateCheckoutData({ cardDetails });
-  };
+  // Always ensure paymentMethod is set to paystack
+  if (checkoutData.paymentMethod !== 'paystack') {
+    onUpdateCheckoutData({ paymentMethod: 'paystack' });
+  }
   
-  const handleMobileMoneyDetailsChange = (mobileMoneyDetails: Partial<CheckoutData['mobileMoneyDetails']>) => {
-    onUpdateCheckoutData({ mobileMoneyDetails });
+  const handlePaymentSuccess = () => {
+    onUpdateCheckoutData({ paymentCompleted: true });
   };
   
   return (
     <div className="space-y-6">
-      <PaymentMethodOptions 
-        selectedMethod={checkoutData.paymentMethod}
-        onMethodChange={handlePaymentMethodChange}
+      <div className="border rounded-lg p-4 border-green-600 bg-green-50">
+        <div className="flex items-center space-x-3">
+          <CreditCardIcon className="h-5 w-5 text-gray-600" />
+          <Label className="text-lg font-medium">Pay with Paystack</Label>
+        </div>
+        <p className="mt-2 text-sm text-gray-600">
+          Securely pay with your credit or debit card via Paystack.
+        </p>
+      </div>
+      
+      <PaystackCheckout 
+        amount={total}
+        metadata={{
+          shippingAddress: checkoutData.shippingAddress,
+          deliveryOption: checkoutData.deliveryOption
+        }}
+        onSuccess={handlePaymentSuccess}
       />
-      
-      {checkoutData.paymentMethod === 'credit-card' && (
-        <CreditCardForm 
-          cardDetails={checkoutData.cardDetails}
-          onCardDetailsChange={handleCardDetailsChange}
-        />
-      )}
-      
-      {checkoutData.paymentMethod === 'mobile-money' && (
-        <MobileMoneyForm 
-          mobileMoneyDetails={checkoutData.mobileMoneyDetails}
-          onMobileMoneyDetailsChange={handleMobileMoneyDetailsChange}
-        />
-      )}
-      
-      {checkoutData.paymentMethod === 'bank-transfer' && (
-        <BankTransferInfo />
-      )}
     </div>
   );
 };

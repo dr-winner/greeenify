@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +12,7 @@ const allProducts = [
     id: "1",
     name: "Fresh Organic Strawberries",
     description: "Sweet and juicy organic strawberries, freshly picked from our fields. Our strawberries are grown without synthetic pesticides or fertilizers, ensuring you get the purest, most natural flavor in every bite. They're perfect for snacking, adding to desserts, or blending into smoothies.",
-    price: 4.99,
+    price: 0.50,
     unit: "per basket",
     image: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     category: "fruits",
@@ -244,7 +243,7 @@ const ProductDetails = () => {
             <h1 className="text-3xl font-heading font-semibold mb-2">{product.name}</h1>
             
             <div className="mb-4">
-              <p className="text-xl font-semibold mb-1">${product.price.toFixed(2)} <span className="text-sm font-normal text-gray-600">{product.unit}</span></p>
+              <p className="text-xl font-semibold mb-1">₵{product.price.toFixed(2)} <span className="text-sm font-normal text-gray-600">{product.unit}</span></p>
               <p className="text-sm text-gray-600">From: {product.farmerName}</p>
             </div>
             

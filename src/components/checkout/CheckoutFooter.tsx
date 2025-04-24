@@ -1,9 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
 interface CheckoutFooterProps {
-  activeStep: 'shipping' | 'payment' | 'review';
+  activeStep: 'shipping' | 'payment';
   onBack: () => void;
   onNext: () => void;
   onPlaceOrder: () => void;
@@ -32,18 +31,8 @@ const CheckoutFooter = ({
           Continue to Payment
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
-      ) : activeStep === 'payment' ? (
-        <Button className="ml-auto bg-green-600 hover:bg-green-700" onClick={onNext}>
-          Review Order
-          <ArrowRight className="h-4 w-4 ml-2" />
-        </Button>
       ) : (
-        <Button 
-          className="ml-auto bg-green-600 hover:bg-green-700" 
-          onClick={onPlaceOrder}
-        >
-          Place Order
-        </Button>
+        <></>
       )}
     </div>
   );

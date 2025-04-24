@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 
 export interface CartItem {
@@ -32,21 +31,26 @@ export interface MobileMoneyDetails {
   provider: string;
 }
 
+export interface ShippingAddress {
+  fullName: string;
+  phoneNumber: string;
+  email?: string;
+  address: string;
+  city: string;
+  region: string;
+  postalCode: string;
+}
+
 export interface CheckoutData {
-  shippingInfo: {
-    fullName: string;
-    phoneNumber: string;
-    address: string;
-    city: string;
-    region: string;
-    postalCode: string;
-  };
+  shippingInfo: ShippingAddress;
+  shippingAddress: ShippingAddress; 
   deliveryOption: string;
   deliveryDate?: string;
   deliveryTime?: string;
   paymentMethod: string;
   cardDetails?: Partial<CardDetails>;
   mobileMoneyDetails?: Partial<MobileMoneyDetails>;
+  paymentCompleted?: boolean;
 }
 
 // For the final submission, we ensure all required fields are present

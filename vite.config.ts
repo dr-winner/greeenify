@@ -10,4 +10,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    exclude: ['@mapbox/node-pre-gyp', 'nock'],
+  },
+  build: {
+    rollupOptions: {
+      external: ['@mapbox/node-pre-gyp', 'nock', 'aws-sdk', 'mock-aws-s3'],
+    },
+  },
+  define: {
+    // Fix for "global is not defined" error
+    global: 'window',
+  },
 });

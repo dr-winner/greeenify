@@ -1,16 +1,20 @@
-
-export type UserRole = 'buyer' | 'farmer';
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  FARMER = 'FARMER',
+  USER = 'USER'
+}
 
 export interface UserProfile {
   id: string;
   email: string;
-  displayName: string;
+  name: string;
   role: UserRole;
   phoneNumber?: string;
   address?: string;
   bio?: string;
   avatar?: string;
-  joinedDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface FarmerProfile extends UserProfile {

@@ -21,7 +21,7 @@ const allProducts: Product[] = [
     id: "1",
     name: "Fresh Organic Strawberries",
     description: "Sweet and juicy organic strawberries, freshly picked from our fields.",
-    price: 4.99,
+    price: 0.50,
     unit: "per basket",
     image: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80",
     category: "fruits",
@@ -317,8 +317,8 @@ const Shop = () => {
                           onValueChange={handlePriceRangeChange}
                         />
                         <div className="flex justify-between">
-                          <span className="text-sm">${priceRange[0].toFixed(2)}</span>
-                          <span className="text-sm">${priceRange[1].toFixed(2)}</span>
+                          <span className="text-sm">₵{priceRange[0].toFixed(2)}</span>
+                          <span className="text-sm">₵{priceRange[1].toFixed(2)}</span>
                         </div>
                       </div>
                     </AccordionContent>
@@ -353,6 +353,7 @@ const Shop = () => {
                           >
                             Non-Organic Only
                           </Label>
+                          
                         </div>
                       </div>
                     </AccordionContent>

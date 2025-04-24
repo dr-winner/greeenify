@@ -1,13 +1,14 @@
-
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingCart } from 'lucide-react';
+import { Heart, ShoppingCart, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Product } from '@/types/product';
 import { useCart } from '@/hooks/useCart';
+import { useWishlist } from '@/hooks/useWishlist';
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from 'react';
+import { useAuthContext } from '@/hooks/useAuthContext';
 
 interface ProductCardProps {
   product: Product;
@@ -15,8 +16,11 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem } = useCart();
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlist();
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
+  const { isAuthenticated, requireAuth } = useAuthContext();
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigating to the product page when clicking the button
@@ -30,6 +34,42 @@ const ProductCard = ({ product }: ProductCardProps) => {
   
   const handleImageError = () => {
     setImageError(true);
+  };
+  
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigating to the product page
+    
+    // Check if user is authenticated
+    if (!requireAuth()) {
+      return;
+    }
+    
+    setIsWishlistLoading(true);
+    
+    try {
+      if (isInWishlist(product.id)) {
+        await removeFromWishlist(product.id);
+        toast({
+          title: "Removed from wishlist",
+          description: `${product.name} has been removed from your wishlist.`,
+        });
+      } else {
+        await addToWishlist(product);
+        toast({
+          title: "Added to wishlist",
+          description: `${product.name} has been added to your wishlist.`,
+        });
+      }
+    } catch (error) {
+      console.error('Wishlist operation failed:', error);
+      toast({
+        title: "Operation failed",
+        description: "There was a problem with your wishlist. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsWishlistLoading(false);
+    }
   };
   
   return (
@@ -48,15 +88,23 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </Badge>
           )}
           {product.isFeatured && (
-            <Badge className="absolute top-2 right-2 bg-harvest-500 text-white">
+            <Badge className="absolute top-2 right-12 bg-harvest-500 text-white">
               Featured
             </Badge>
           )}
           <button 
-            className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center bg-white/80 rounded-full"
-            aria-label="Add to wishlist"
+            className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center bg-white/80 rounded-full hover:bg-gray-100"
+            aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={handleWishlistToggle}
+            disabled={isWishlistLoading}
           >
-            <Heart className="h-4 w-4 text-gray-700" />
+            {isWishlistLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-green-600" />
+            ) : (
+              <Heart 
+                className={`h-4 w-4 ${isAuthenticated && isInWishlist(product.id) ? 'text-red-500 fill-red-500' : 'text-gray-700'}`} 
+              />
+            )}
           </button>
         </div>
         

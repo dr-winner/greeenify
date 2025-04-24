@@ -20,14 +20,14 @@ const AuthForm = () => {
         <RegisterForm />
       </TabsContent>
       
-      <div className="mt-8 text-center">
+      {/* <div className="mt-8 text-center">
         <p className="text-gray-600">
           By signing in, you agree to our{' '}
           <Link to="/terms" className="text-green-600 hover:text-green-700">Terms of Service</Link>
           {' '}and{' '}
           <Link to="/privacy" className="text-green-600 hover:text-green-700">Privacy Policy</Link>
         </p>
-      </div>
+      </div> */}
     </Tabs>
   );
 };

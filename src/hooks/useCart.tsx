@@ -1,6 +1,8 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product } from '@/types/product';
+import { useAuthContext } from '@/hooks/useAuthContext';
+import { doc, setDoc, getDoc, collection, query, where, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface CartItem {
   product: Product;
@@ -9,14 +11,15 @@ interface CartItem {
 
 interface CartContextProps {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
+  addItem: (product: Product, quantity?: number) => Promise<void>;
+  removeItem: (productId: string) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
   subtotal: number;
   total: number;
   shippingCost: number;
   itemCount: number;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -25,25 +28,50 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-  const shippingCost = 50.00; // Fixed shipping cost in GHS
+  const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated, userId } = useAuthContext();
+  const shippingCost = 0; // Free shipping
   
-  // Load cart from localStorage on initial render
+  // Load cart from Firestore when user authentication state changes
   useEffect(() => {
-    const savedCart = localStorage.getItem('greenify-cart');
-    if (savedCart) {
+    const loadCart = async () => {
+      setIsLoading(true);
       try {
-        const parsedCart = JSON.parse(savedCart);
-        setItems(parsedCart);
+        if (isAuthenticated && userId) {
+          console.log('Loading cart for user:', userId);
+          
+          // Get user's cart from Firestore
+          const cartRef = collection(db, 'carts');
+          const q = query(cartRef, where('userId', '==', userId));
+          const querySnapshot = await getDocs(q);
+          
+          const cartItems: CartItem[] = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            cartItems.push({
+              product: data.product as Product,
+              quantity: data.quantity
+            });
+          });
+          
+          setItems(cartItems);
+          console.log('Cart loaded with', cartItems.length, 'items');
+        } else {
+          // Clear cart when user is not authenticated
+          setItems([]);
+        }
       } catch (error) {
-        console.error('Failed to parse saved cart', error);
+        console.error('Error loading cart:', error);
+      } finally {
+        setIsLoading(false);
       }
-    }
-  }, []);
+    };
+
+    loadCart();
+  }, [isAuthenticated, userId]);
   
-  // Save cart to localStorage whenever it changes
+  // Calculate subtotal and total whenever items change
   useEffect(() => {
-    localStorage.setItem('greenify-cart', JSON.stringify(items));
-    
     // Calculate subtotal
     const newSubtotal = items.reduce(
       (sum, item) => sum + item.product.price * item.quantity, 
@@ -52,86 +80,168 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setSubtotal(newSubtotal);
     
     // Calculate total (subtotal + shipping)
-    setTotal(newSubtotal + (newSubtotal > 0 ? shippingCost : 0));
-  }, [items, shippingCost]);
-  
-  // Sync cart with backend (real implementation)
-  useEffect(() => {
-    const authToken = localStorage.getItem('auth_token');
-    if (authToken && items.length > 0) {
-      // We'd normally call our backend to sync the cart
-      fetch('https://api.yourbackend.com/api/cart/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          items: items.map(item => ({
-            product_id: item.product.id,
-            quantity: item.quantity,
-          })),
-        }),
-      }).catch(error => {
-        console.error('Failed to sync cart with backend:', error);
-      });
-    }
+    // Since shipping is free, total equals subtotal
+    setTotal(newSubtotal);
   }, [items]);
   
-  const addItem = (product: Product, quantity = 1) => {
-    setItems(currentItems => {
+  const addItem = async (product: Product, quantity = 1) => {
+    if (!isAuthenticated || !userId) {
+      console.error('Cannot add to cart: User not authenticated');
+      return;
+    }
+
+    try {
       // Check if product already exists in cart
-      const existingItemIndex = currentItems.findIndex(
+      const existingItemIndex = items.findIndex(
         item => item.product.id === product.id
       );
       
       if (existingItemIndex > -1) {
-        // If product exists, update quantity
-        const newItems = [...currentItems];
-        newItems[existingItemIndex].quantity += quantity;
-        return newItems;
+        // If product exists, update quantity in Firestore
+        const cartRef = collection(db, 'carts');
+        const q = query(
+          cartRef, 
+          where('userId', '==', userId),
+          where('productId', '==', product.id)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          const cartItemDoc = querySnapshot.docs[0];
+          const newQuantity = items[existingItemIndex].quantity + quantity;
+          
+          await updateDoc(cartItemDoc.ref, {
+            quantity: newQuantity,
+            updatedAt: new Date()
+          });
+          
+          // Update local state
+          const newItems = [...items];
+          newItems[existingItemIndex].quantity = newQuantity;
+          setItems(newItems);
+        }
       } else {
-        // If product doesn't exist, add new item
-        return [...currentItems, { product, quantity }];
+        // If product doesn't exist, add new item to Firestore
+        const cartItemRef = doc(collection(db, 'carts'));
+        await setDoc(cartItemRef, {
+          id: cartItemRef.id,
+          userId: userId,
+          productId: product.id,
+          product: product,
+          quantity: quantity,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+        
+        // Update local state
+        setItems(prevItems => [...prevItems, { product, quantity }]);
       }
-    });
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    }
   };
   
-  const removeItem = (productId: string) => {
-    setItems(currentItems => 
-      currentItems.filter(item => item.product.id !== productId)
-    );
-  };
-  
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(productId);
+  const removeItem = async (productId: string) => {
+    if (!isAuthenticated || !userId) {
+      console.error('Cannot remove from cart: User not authenticated');
       return;
     }
-    
-    setItems(currentItems => 
-      currentItems.map(item => 
-        item.product.id === productId
-          ? { ...item, quantity }
-          : item
-      )
-    );
+
+    try {
+      // Find the cart item in Firestore
+      const cartRef = collection(db, 'carts');
+      const q = query(
+        cartRef, 
+        where('userId', '==', userId),
+        where('productId', '==', productId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      // Delete each matching document
+      const deletePromises = querySnapshot.docs.map(doc => 
+        deleteDoc(doc.ref)
+      );
+      
+      await Promise.all(deletePromises);
+      
+      // Update local state
+      setItems(currentItems => 
+        currentItems.filter(item => item.product.id !== productId)
+      );
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+    }
   };
   
-  const clearCart = () => {
-    setItems([]);
-    
-    // Clear cart in backend as well
-    const authToken = localStorage.getItem('auth_token');
-    if (authToken) {
-      fetch('https://api.yourbackend.com/api/cart/clear', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-        },
-      }).catch(error => {
-        console.error('Failed to clear cart in backend:', error);
-      });
+  const updateQuantity = async (productId: string, quantity: number) => {
+    if (!isAuthenticated || !userId) {
+      console.error('Cannot update cart: User not authenticated');
+      return;
+    }
+
+    try {
+      if (quantity <= 0) {
+        await removeItem(productId);
+        return;
+      }
+      
+      // Find the cart item in Firestore
+      const cartRef = collection(db, 'carts');
+      const q = query(
+        cartRef, 
+        where('userId', '==', userId),
+        where('productId', '==', productId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const cartItemDoc = querySnapshot.docs[0];
+        
+        await updateDoc(cartItemDoc.ref, {
+          quantity: quantity,
+          updatedAt: new Date()
+        });
+        
+        // Update local state
+        setItems(currentItems => 
+          currentItems.map(item => 
+            item.product.id === productId
+              ? { ...item, quantity }
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating cart item quantity:', error);
+    }
+  };
+  
+  const clearCart = async () => {
+    if (!isAuthenticated || !userId) {
+      console.error('Cannot clear cart: User not authenticated');
+      return;
+    }
+
+    try {
+      // Find all user's cart items
+      const cartRef = collection(db, 'carts');
+      const q = query(cartRef, where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      
+      // Delete each document
+      const deletePromises = querySnapshot.docs.map(doc => 
+        deleteDoc(doc.ref)
+      );
+      
+      await Promise.all(deletePromises);
+      
+      // Clear local state
+      setItems([]);
+    } catch (error) {
+      console.error('Error clearing cart:', error);
     }
   };
   
@@ -147,6 +257,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     total,
     shippingCost,
     itemCount,
+    isLoading
   };
   
   return (

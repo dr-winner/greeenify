@@ -12,7 +12,7 @@ const featuredProducts = [
     id: "1",
     name: "Fresh Organic Strawberries",
     description: "Sweet and juicy organic strawberries, freshly picked from our fields.",
-    price: 4.99,
+    price: 0.50,
     unit: "per basket",
     image: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     category: "fruits",
@@ -153,13 +153,13 @@ const Index = () => {
                 >
                   <Link to="/shop">Shop Now</Link>
                 </Button>
-                <Button 
+                {/* <Button 
                   variant="outline" 
                   className="border-green-600 text-green-600 hover:bg-green-50 px-8 py-6 text-lg"
                   asChild
                 >
                   <Link to="/farmers">Meet Our Farmers</Link>
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className="relative hidden md:block">
