@@ -1,68 +1,72 @@
 
 import { Link } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useAuthContext } from '@/hooks/useAuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  navLinks: Array<{ name: string; path: string }>;
+  navLinks: {
+    name: string;
+    href: string;
+  }[];
 }
 
 const MobileMenu = ({ isOpen, onClose, navLinks }: MobileMenuProps) => {
-  const { isAuthenticated, userRole, logout } = useAuthContext();
+  const { isAuthenticated, userName, logout } = useAuthContext();
+  const navigate = useNavigate();
 
-  if (!isOpen) return null;
-
+  const handleLogout = () => {
+    logout();
+    onClose();
+    navigate('/');
+  };
+  
   return (
-    <div className="md:hidden pt-4 pb-3 border-t mt-3">
-      <nav className="flex flex-col space-y-3">
+    <div className={`fixed inset-0 bg-white z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      {/* Mobile menu header and top section */}
+      <div className="p-4 flex items-center justify-between border-b">
+        <span className="font-bold text-lg">Menu</span>
+        <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100">
+          <X className="h-6 w-6" />
+        </button>
+      </div>
+      
+      {/* Mobile navigation links */}
+      <div className="mt-4">
         {navLinks.map((link) => (
-          <Link 
-            key={link.path} 
-            to={link.path}
-            className={`px-2 py-1 font-medium ${
-              location.pathname === link.path ? 'text-green-600' : 'text-gray-700'
-            }`}
+          <Link
+            key={link.href}
+            to={link.href}
+            className="block px-4 py-3 text-lg hover:bg-green-50 hover:text-green-600 transition-colors"
             onClick={onClose}
           >
             {link.name}
           </Link>
         ))}
-        <div className="flex flex-col space-y-2 pt-2 border-t">
-          {isAuthenticated ? (
-            <>
-              <Link to="/dashboard" className="px-2 py-1" onClick={onClose}>
-                Dashboard
-              </Link>
-              <Link to="/orders" className="px-2 py-1" onClick={onClose}>
-                My Orders
-              </Link>
-              {userRole === 'farmer' && (
-                <Link to="/my-products" className="px-2 py-1" onClick={onClose}>
-                  My Products
-                </Link>
-              )}
-              <button 
-                onClick={() => {
-                  logout();
-                  onClose();
-                }} 
-                className="px-2 py-1 text-left text-red-600 flex items-center"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="px-2 py-1" onClick={onClose}>
-                Sign In
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
+      </div>
+      
+      {/* User menu and bottom section */}
+      <div className="p-4 mt-auto border-t">
+        {isAuthenticated ? (
+          <div className="space-y-2">
+            <p className="text-gray-700">Logged in as: {userName}</p>
+            <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-lg hover:bg-gray-100 hover:text-red-600 transition-colors">
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Link to="/login" className="block px-4 py-3 text-lg hover:bg-gray-100 hover:text-green-600 transition-colors" onClick={onClose}>
+              Login
+            </Link>
+            <Link to="/register" className="block px-4 py-3 text-lg hover:bg-gray-100 hover:text-green-600 transition-colors" onClick={onClose}>
+              Register
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

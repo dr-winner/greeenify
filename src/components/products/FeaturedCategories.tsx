@@ -1,37 +1,65 @@
 
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
+import { Leaf, Wheat, Bean, Egg } from 'lucide-react';
 
 const categories = [
   {
-    id: 'vegetables',
-    name: 'Vegetables',
-    image: 'https://media.licdn.com/dms/image/v2/D4D12AQG8xwTte9Bp5w/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1712375344673?e=1748476800&v=beta&t=G9rF7LPTY3bjDEhriigztc0Nc91XuP56MOn3A7bp3fE',
+    id: 'fresh-produce',
+    name: 'Fresh Produce',
+    icon: Leaf,
+    image: 'https://images.unsplash.com/photo-1557844352-761f2ddf6d97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    description: 'Fresh vegetables, fruits and greens',
     count: 56
   },
   {
-    id: 'fruits',
-    name: 'Fruits',
-    image: 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    count: 43
+    id: 'grains-cereals',
+    name: 'Grains & Cereals',
+    icon: Wheat,
+    image: 'https://images.unsplash.com/photo-1574323347407-f5e1c5a1ec05?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    description: 'Local and imported grains',
+    count: 32
   },
   {
-    id: 'tubers',
-    name: 'Tubers & Roots',
-    image: 'https://media.istockphoto.com/id/530514284/photo/potatoes-in-the-farm.jpg?s=612x612&w=0&k=20&c=YE5hCCpeyOYytHuV_H8BBjbb0doK21Ukv0Dl_48862Y=',
+    id: 'legumes-pulses',
+    name: 'Legumes & Pulses',
+    icon: Bean,
+    image: 'https://images.unsplash.com/photo-1515543904379-3d757abe3d10?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    description: 'Beans, cowpeas and groundnuts',
     count: 27
   },
   {
-    id: 'herbs',
-    name: 'Herbs & Spices',
-    image: 'https://foodal.com/wp-content/uploads/2018/11/Your-Ultimate-Guide-to-Kitchen-Herbs-Spices-FB.jpg',
-    count: 18
+    id: 'root-crops',
+    name: 'Root Crops & Tubers',
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 13V4M17 8l-5 5-5-5M4 22h16a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-7v6.4a2 2 0 1 1-2 0V10H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z"/>
+      </svg>
+    ),
+    image: 'https://images.unsplash.com/photo-1598030340644-e7c9538c812c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    description: 'Cassava, yam, cocoyam and more',
+    count: 20
   },
   {
-    id: 'organic',
-    name: 'Organic',
+    id: 'processed-foods',
+    name: 'Processed Foods',
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+        <line x1="6" y1="17" x2="18" y2="17"/>
+      </svg>
+    ),
     image: 'https://images.unsplash.com/photo-1621956838481-f8f616950454?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    count: 64
+    description: 'Gari, fufu flour and more',
+    count: 38
+  },
+  {
+    id: 'animal-protein',
+    name: 'Animal Protein',
+    icon: Egg,
+    image: 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    description: 'Dried fish, smoked fish and more',
+    count: 17
   }
 ];
 
@@ -46,7 +74,7 @@ const FeaturedCategories = () => {
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-6">
           {categories.map((category) => (
             <Link key={category.id} to={`/shop/${category.id}`}>
               <Card className="card-hover h-full overflow-hidden">
@@ -62,7 +90,13 @@ const FeaturedCategories = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                   <CardContent className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <h3 className="font-heading font-semibold text-lg mb-1">{category.name}</h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      {typeof category.icon === 'function' && (
+                        <category.icon className="h-5 w-5 text-white" />
+                      )}
+                      <h3 className="font-heading font-semibold text-lg">{category.name}</h3>
+                    </div>
+                    <p className="text-xs text-gray-100 mb-1">{category.description}</p>
                     <p className="text-sm text-gray-100">{category.count} products</p>
                   </CardContent>
                 </div>

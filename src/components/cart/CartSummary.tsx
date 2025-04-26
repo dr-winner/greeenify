@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -67,12 +68,12 @@ const CartSummary = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Shipping</span>
-            <span className="text-green-600 font-medium">Free</span>
+            <span>₵{shippingCost.toFixed(2)}</span>
           </div>
           <Separator />
           <div className="flex justify-between font-semibold">
             <span>Total</span>
-            <span>₵{subtotal.toFixed(2)}</span>
+            <span>₵{total.toFixed(2)}</span>
           </div>
         </div>
         

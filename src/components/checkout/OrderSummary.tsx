@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from '@/hooks/useCart';
 import { DeliveryOption } from "./types";
@@ -7,7 +8,7 @@ interface OrderSummaryProps {
 }
 
 const OrderSummary = ({ selectedDeliveryOption }: OrderSummaryProps) => {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, shippingCost } = useCart();
   
   return (
     <Card>
@@ -51,11 +52,24 @@ const OrderSummary = ({ selectedDeliveryOption }: OrderSummaryProps) => {
           </div>
           <div className="flex justify-between">
             <span>Shipping</span>
-            <span className="text-green-600 font-medium">Free</span>
+            <span>
+              {selectedDeliveryOption?.price === 0 
+                ? 'Free' 
+                : `₵${selectedDeliveryOption?.price.toFixed(2) || shippingCost.toFixed(2)}`
+              }
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tax</span>
+            <span>₵{(subtotal * 0.08).toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-medium text-base border-t pt-3 mt-3">
             <span>Total</span>
-            <span>₵{subtotal.toFixed(2)}</span>
+            <span>₵{(
+              subtotal + 
+              (selectedDeliveryOption?.price !== undefined ? selectedDeliveryOption.price : shippingCost) + 
+              (subtotal * 0.08)
+            ).toFixed(2)}</span>
           </div>
         </div>
       </CardContent>

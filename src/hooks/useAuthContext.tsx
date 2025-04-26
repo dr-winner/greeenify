@@ -1,9 +1,7 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { firebaseAuthService, AuthState } from '@/services/firebaseAuthService';
-import { useToast } from "@/hooks/use-toast";
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { useNavigate } from 'react-router-dom';
+import { authService, AuthState } from '@/services/authService';
 
 type AuthContextType = AuthState & {
   logout: () => void;
@@ -17,85 +15,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
     userName: null,
-    userRole: null,
-    userId: null
+    userRole: null
   });
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoading(true);
-      try {
-        if (user) {
-          // User is signed in
-          const userName = localStorage.getItem('user_name');
-          const userRole = localStorage.getItem('user_role');
-          
-          setAuthState({
-            isAuthenticated: true,
-            userName,
-            userRole: userRole as any,
-            userId: user.uid
-          });
-
-          // Redirect to shop page if user is on login or signup page
-          if (location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/') {
-            navigate('/shop');
-          }
-        } else {
-          // User is signed out
-          setAuthState({
-            isAuthenticated: false,
-            userName: null,
-            userRole: null,
-            userId: null
-          });
-        }
-      } catch (error) {
-        console.error('Error updating auth state:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    });
+    const updateAuthState = () => {
+      const currentState = authService.getAuthStatus();
+      setAuthState(currentState);
+    };
     
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, [navigate, location.pathname]);
+    updateAuthState();
+    
+    // Listen for storage events (for multi-tab support)
+    window.addEventListener('storage', updateAuthState);
+    
+    return () => {
+      window.removeEventListener('storage', updateAuthState);
+    };
+  }, []);
 
   const contextValue: AuthContextType = {
     ...authState,
-    logout: async () => {
-      try {
-        await firebaseAuthService.logout(navigate);
-        toast({
-          title: "Logged out",
-          description: "You have been successfully logged out.",
-        });
-      } catch (error) {
-        console.error('Error during logout:', error);
-        toast({
-          title: "Logout Error",
-          description: "There was a problem logging out. Please try again.",
-          variant: "destructive"
-        });
-      }
+    logout: () => {
+      authService.logout(navigate);
+      setAuthState({
+        isAuthenticated: false,
+        userName: null,
+        userRole: null
+      });
     },
-    checkAuthStatus: () => {
-      return firebaseAuthService.checkAuthStatus();
-    },
-    requireAuth: () => {
-      return firebaseAuthService.requireAuth(navigate);
-    }
+    checkAuthStatus: () => authService.checkAuthStatus(),
+    requireAuth: () => authService.requireAuth(navigate)
   };
-
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
-    </div>;
-  }
 
   return (
     <AuthContext.Provider value={contextValue}>

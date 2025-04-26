@@ -1,9 +1,9 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, Menu, X, Heart, Loader2 } from 'lucide-react';
+import { Search, Menu, X, Heart } from 'lucide-react';
 import { useAuthContext } from '@/hooks/useAuthContext';
-import { useWishlist } from '@/hooks/useWishlist';
 
 // Import our extracted components
 import Logo from './navbar/Logo';
@@ -16,8 +16,7 @@ import { mainNavLinks } from './navbar/navConstants';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { requireAuth, isAuthenticated } = useAuthContext();
-  const { items: wishlistItems, isLoading: wishlistLoading } = useWishlist();
+  const { requireAuth } = useAuthContext();
   
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   
@@ -39,29 +38,16 @@ const Navbar = () => {
           
           {/* Desktop: Search, Wishlist, Cart, and Auth */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* <Button variant="ghost" size="icon" aria-label="Search">
+            <Button variant="ghost" size="icon" aria-label="Search">
               <Search className="h-5 w-5" />
-            </Button> */}
+            </Button>
             <Button 
               variant="ghost" 
               size="icon" 
               aria-label="Wishlist"
               onClick={() => handleProtectedNavigation('/wishlist')}
-              className="relative"
-              disabled={wishlistLoading}
             >
-              {wishlistLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <>
-                  <Heart className={`h-5 w-5 ${isAuthenticated && wishlistItems.length > 0 ? 'text-red-500 fill-red-500' : ''}`} />
-                  {isAuthenticated && wishlistItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                      {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
-                    </span>
-                  )}
-                </>
-              )}
+              <Heart className="h-5 w-5" />
             </Button>
             
             {/* Cart Button */}
@@ -73,27 +59,6 @@ const Navbar = () => {
           
           {/* Mobile: Cart and Menu Toggle */}
           <div className="flex md:hidden items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              aria-label="Wishlist"
-              onClick={() => handleProtectedNavigation('/wishlist')}
-              className="relative"
-              disabled={wishlistLoading}
-            >
-              {wishlistLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <>
-                  <Heart className={`h-5 w-5 ${isAuthenticated && wishlistItems.length > 0 ? 'text-red-500 fill-red-500' : ''}`} />
-                  {isAuthenticated && wishlistItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                      {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
-                    </span>
-                  )}
-                </>
-              )}
-            </Button>
             <CartButton isMobile={true} />
             <Button onClick={toggleMenu} variant="ghost" size="icon" aria-label="Menu">
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

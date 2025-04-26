@@ -1,9 +1,11 @@
+
 import ShippingStep from './steps/ShippingStep';
 import PaymentStep from './steps/PaymentStep';
+import ReviewStep from './steps/ReviewStep';
 import { CheckoutData } from "./types";
 
 interface CheckoutContentProps {
-  activeStep: 'shipping' | 'payment';
+  activeStep: 'shipping' | 'payment' | 'review';
   checkoutData: CheckoutData;
   onUpdateCheckoutData: (data: Partial<CheckoutData>) => void;
   onContinue: () => void;
@@ -30,6 +32,10 @@ const CheckoutContent = ({
           checkoutData={checkoutData}
           onUpdateCheckoutData={onUpdateCheckoutData}
         />
+      )}
+      
+      {activeStep === 'review' && (
+        <ReviewStep checkoutData={checkoutData} />
       )}
     </>
   );

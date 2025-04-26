@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import OrderProgress from './OrderProgress';
 import OrderSummary from './OrderSummary';
@@ -27,11 +28,11 @@ const CheckoutFlow = ({ onComplete }: CheckoutFlowProps) => {
   }
   
   const handleBack = () => {
-    setActiveStep('shipping');
+    setActiveStep(activeStep === 'payment' ? 'shipping' : 'payment');
   };
 
   const handleNext = () => {
-    setActiveStep('payment');
+    setActiveStep(activeStep === 'shipping' ? 'payment' : 'review');
   };
   
   return (

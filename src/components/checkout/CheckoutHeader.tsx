@@ -1,7 +1,8 @@
+
 import { CardTitle, CardDescription } from "@/components/ui/card";
 
 interface CheckoutHeaderProps {
-  activeStep: 'shipping' | 'payment';
+  activeStep: 'shipping' | 'payment' | 'review';
 }
 
 const CheckoutHeader = ({ activeStep }: CheckoutHeaderProps) => {
@@ -10,10 +11,12 @@ const CheckoutHeader = ({ activeStep }: CheckoutHeaderProps) => {
       <CardTitle>
         {activeStep === 'shipping' && 'Shipping Information'}
         {activeStep === 'payment' && 'Payment Method'}
+        {activeStep === 'review' && 'Review Your Order'}
       </CardTitle>
       <CardDescription>
         {activeStep === 'shipping' && 'Choose your delivery options'}
-        {activeStep === 'payment' && 'Complete your order with Paystack'}
+        {activeStep === 'payment' && 'Select your preferred payment method'}
+        {activeStep === 'review' && 'Confirm your order details before placing the order'}
       </CardDescription>
     </>
   );

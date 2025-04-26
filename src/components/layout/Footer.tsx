@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
 
@@ -60,10 +61,10 @@ const Footer = () => {
           <div>
             <h3 className="font-heading font-semibold text-lg mb-4">Contact Us</h3>
             <address className="not-italic text-gray-300 space-y-2">
-              <p>Legon - Accra</p>
+              <p>1234 Green Valley Road</p>
               <p>Farmington, CA 92345</p>
               <p>Email: <a href="mailto:hello@greenify.com" className="hover:text-white transition-colors">hello@greenify.com</a></p>
-              <p>Phone: <a href="tel:+233558800657" className="hover:text-white transition-colors">+233558800657</a></p>
+              <p>Phone: <a href="tel:+11234567890" className="hover:text-white transition-colors">(123) 456-7890</a></p>
             </address>
           </div>
         </div>
@@ -73,9 +74,9 @@ const Footer = () => {
             &copy; {currentYear} Greenify. All rights reserved.
           </p>
           <div className="flex space-x-6">
-            <Link to="/insectdetector" className="text-gray-400 hover:text-white text-sm transition-colors">InsectDetector</Link>
-            <Link to="/weeddetector" className="text-gray-400 hover:text-white text-sm transition-colors">WeedDetector</Link>
-            <Link to="/nasadata" className="text-gray-400 hover:text-white text-sm transition-colors">NasaData</Link>
+            <Link to="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</Link>
+            <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</Link>
+            <Link to="/faq" className="text-gray-400 hover:text-white text-sm transition-colors">FAQ</Link>
           </div>
         </div>
       </div>
